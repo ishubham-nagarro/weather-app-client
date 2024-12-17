@@ -12,6 +12,16 @@ The frontend application is a React single-page application (SPA) that provides 
 
 **Role-Based Access Control:** Redirects based on user roles.
 
+**Form Validations**: Implemented form validations on Signup, Login & Update User details pages.
+
+## Credentials
+
+**SuperAdmin**: email: superadmin@gmail.com password: Bansal1999
+
+**Admin**: email: shubhambansal@gmail.com password: Bansal1999
+
+**User**: email: gourabbanerjee@gmail.com password: test@123
+
 ### Components
 
 **Signup**: Allows users to create an account.
@@ -21,8 +31,6 @@ The frontend application is a React single-page application (SPA) that provides 
 **User Dashboard**: Displays weather data of cities fetched from the backend.
 
 **Admin Dashboard**: Displays a user management table with edit & delete functionality.
-
-**Form Validations**: Form Validations on edit user details.
 
 **Profile Menu**: To change password and logout user.
 
