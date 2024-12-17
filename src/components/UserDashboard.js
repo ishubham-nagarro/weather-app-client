@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, CircularProgress } from '@mui/material';
 import apiService from '../services/apiService';
+import authHelper from '../utils/authHelper';
 
 const UserDashboard = () => {
     const [weatherData, setWeatherData] = useState(null);
-    const [city, setCity] = useState('');
+    const [city, setCity] = useState('London'); // Default City
+    const user = authHelper.getUser();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchWeatherData('London');
-    }, []);
+        fetchWeatherData(city);
+    });
 
     const fetchWeatherData = async (city) => {
+        setLoading(true);
         try {
             const data = await apiService.getWeather(city); // Fetch weather data
             setWeatherData(data);
         } catch (error) {
-            alert(error.message || 'Failed to fetch weather data');
+            setWeatherData(null)
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -26,10 +32,9 @@ const UserDashboard = () => {
     };
 
     return (
-        <Container>
-            <Typography variant="h4">User Dashboard</Typography>
-            {/* <Typography variant="body1">Welcome, {user?.name}</Typography> */}
-
+        <Container sx={{ paddingTop: '24px' }}>
+            <Typography variant="h4" marginBottom="20px">Weather Forcast for {city}</Typography>
+            <Typography variant="h6" >Welcome, {user?.name}</Typography>
             <TextField
                 label="City"
                 value={city}
@@ -37,21 +42,32 @@ const UserDashboard = () => {
                 fullWidth
                 margin="normal"
             />
-            <Button variant="contained" color="primary" onClick={handleFetch}>
+            <Button sx={{ marginTop: '16px' }} variant="contained" color="primary" onClick={handleFetch}>
                 Fetch Weather
             </Button>
 
-            {weatherData && (
-                <>
-                    <Typography variant="body2">
-                        Coordinates: 
-                        <p>Latitude: {weatherData.coord.lat}, Longitude: {weatherData.coord.lon}</p>
+            {loading ? (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: '20px',
+                    }}
+                >
+                    <CircularProgress sx={{ height: '30px !important', width: '30px !important' }} />
+                </Box>
+            ) : weatherData ? (
+                <div style={{ margin: '20px 0' }}>
+                    <Typography variant="h6">
+                        Coordinates:
                     </Typography>
-                    <Typography variant="body2">
-                        Temperature: {weatherData.main.temp}°F, Condition: {weatherData.weather[0].description}
+                    <p>Latitude: {weatherData?.coord.lat}, Longitude: {weatherData?.coord.lon}</p>
+                    <Typography variant="body1">
+                        Temperature: {weatherData?.main.temp}°F, Condition: {weatherData?.weather[0].description}
                     </Typography>
-                </>
-            )}
+                </div>) : <p>No Data Found</p>
+            }
         </Container>
     );
 }
