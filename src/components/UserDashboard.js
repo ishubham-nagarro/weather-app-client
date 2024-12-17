@@ -11,7 +11,7 @@ const UserDashboard = () => {
 
     useEffect(() => {
         fetchWeatherData(city);
-    });
+    }, []);
 
     const fetchWeatherData = async (city) => {
         setLoading(true);
